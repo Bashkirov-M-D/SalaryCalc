@@ -4,14 +4,17 @@ using System.Text;
 
 namespace SalaryCalc.Other
 {
-    class User
+    public class User
     {
-        public enum Permission
+        public enum Permissions
         {
             Superuser,
             Other
         }
-        private Permission permission;
+        private Permissions permission;
         private int id;
+
+        internal Permissions Permission { get => permission; set => permission = value; }
+        public int Id { get => id; set => id = value; }
     }
 }

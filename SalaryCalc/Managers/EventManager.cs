@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalaryCalc.Other;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -7,19 +8,23 @@ namespace SalaryCalc
     public class EventManager
     {
         private readonly MainForm form;
+        private readonly User user;
 
-        public EventManager(MainForm mainForm)
+        public EventManager(MainForm mainForm, User user)
         {
+            this.user = user;
             form = mainForm;
             FillTable();
         }
 
         public void FillTable()
         {
-            List<StaffMember> staff = DBManager.Load();
-            foreach (StaffMember member in staff)
+            if (user.Permission == User.Permissions.Superuser)
+                FilterTable(new DBManager.Condition());
+            else
             {
-                form.AddStuffMemberInTable(member);
+                FilterTableById(user.Id.ToString());
+                form.disableSuperuserPermissionControls();
             }
         }
 

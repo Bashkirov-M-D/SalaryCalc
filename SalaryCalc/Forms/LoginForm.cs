@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalaryCalc.Other;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +11,8 @@ namespace SalaryCalc
 {
     public partial class LoginForm : Form
     {
+        private User user;
+
         private TextBox loginTextBox;
         private TextBox passwordTextBox;
 
@@ -17,17 +20,18 @@ namespace SalaryCalc
 
         private Button loginButton;
 
-        public LoginForm()
+        public LoginForm(User user)
         {
-            InitializeComponent();
-            LoadForm();
-            CreateComponents();
+            this.user = user;
+            Load += LoadForm;
         }
 
-        private void LoadForm()
+        private void LoadForm(object sender, EventArgs e)
         {
+            InitializeComponent();
             this.Size = new Size(300, 200);
             this.CenterToScreen();
+            CreateComponents();
         }
 
         private void CreateComponents()
@@ -67,14 +71,32 @@ namespace SalaryCalc
             var res = Login(loginTextBox.Text, passwordTextBox.Text);
             if(!res)
                 MessageBox.Show("wrong login or password");
+            else
+                Close();
         }
 
         private bool Login(string login, string password)
         {
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
                 return false;
+            if (login == "admin" && password == "admin")
+            {
+                user.Permission = User.Permissions.Superuser;
+                return true;
+            }
 
+            List<StaffMember> list = DBManager.Load(new DBManager.Condition()
+                .Field(DBManager.Fields.Login)
+                .EqualsTo(login)
+                .And()
+                .Field(DBManager.Fields.Password)
+                .EqualsTo(password));
 
+            if (list.Count == 0)
+                return false;
+
+            user.Permission = User.Permissions.Other;
+            user.Id = list[0].Id;
 
             return true;
         }

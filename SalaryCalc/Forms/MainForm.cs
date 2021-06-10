@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalaryCalc.Other;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -26,11 +27,11 @@ namespace SalaryCalc
 
         private Label label;
     
-        public MainForm()
+        public MainForm(User user)
         {
             InitializeComponent();
             LoadForm();
-            manager = new EventManager(this);
+            manager = new EventManager(this, user);
         }
 
         public void AddStuffMemberInTable(StaffMember staffMember)
@@ -46,6 +47,11 @@ namespace SalaryCalc
             staffTable.Rows.Clear();
         }
 
+        public void disableSuperuserPermissionControls()
+        {
+            addStaffMember.Enabled = false;
+            calcAllSalary.Enabled = false;
+        }
         private void LoadForm()
         {
             this.Size = new Size(1000, 850);
@@ -118,14 +124,12 @@ namespace SalaryCalc
             calcAllSalary.Click += CalcAllSalary_Click;
             filter.Click += Filter_Click;
         }
+        
 
         private void Filter_Click(object sender, EventArgs e)
         {
-            string id = idTextBox.Text;
-            if (id == "" || id == "0")
-                manager.FillTable();
-            else
-                manager.FilterTableById(id);
+            string id = staffTable.CurrentRow.HeaderCell.Value.ToString();
+            manager.FilterTableById(id);
         }
 
         private void CalcAllSalary_Click(object sender, EventArgs e)
@@ -140,7 +144,7 @@ namespace SalaryCalc
             try
             {
                 int salary;
-                salary = manager.CalculateSalary(Convert.ToInt32(idTextBox.Text));
+                salary = manager.CalculateSalary(Convert.ToInt32(staffTable.CurrentRow.HeaderCell.Value.ToString()));
                 MessageBox.Show("Salary: " + salary);
             } catch(FormatException exc)
             {
@@ -189,8 +193,8 @@ namespace SalaryCalc
             this.Controls.Add(label);
             label.Location = new Point(700, 590);
             label.Size = new Size(200, 200);
-            label.Text = "Staff member id text box is used to 1) identify who will be supervisor of a staff member you are adding " +
-                "2) to choose whose salary to calculate 3) to filter this person's subordinates (empty or 0 for all)";
+            label.Text = "Staff member id text box is used to identify who will be supervisor of a staff member you are adding\n" +
+                "click any row to choose whose salary to calculate or to filter this person's subordinates (empty or 0 for all)";
 
             groupBox = new ComboBox();
             this.Controls.Add(groupBox);
