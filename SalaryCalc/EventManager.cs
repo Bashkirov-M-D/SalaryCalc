@@ -1,43 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SalaryCalc
 {
     public class EventManager
     {
-        private MainForm form;
+        private readonly MainForm form;
 
         public EventManager(MainForm mainForm)
         {
             form = mainForm;
-            fillTable();
+            FillTable();
         }
 
-        public void fillTable(string filter = "")
+        public void FillTable()
         {
-            List<StaffMember> staff = DBManager.Load(filter);
+            List<StaffMember> staff = DBManager.Load();
             foreach (StaffMember member in staff)
             {
-                form.addStuffMemberInTable(member);
+                form.AddStuffMemberInTable(member);
             }
         }
 
-        public void filterTable(string filter)
+        public void FilterTable(DBManager.Condition condition)
         {
-            form.clearTable();
-            List<StaffMember> staff = DBManager.Load(filter);
+            form.ClearTable();
+            List<StaffMember> staff = DBManager.Load(condition);
             if (staff == null)
                 return;
             foreach (StaffMember member in staff)
             {
-                form.addStuffMemberInTable(member);
+                form.AddStuffMemberInTable(member);
             }
         }
 
-        public bool addStaffMember(string name, string hireDate, int group, string salary, string id)
+        public void FilterTableById(string id)
+        {
+            FilterTable(new DBManager.Condition()
+                .Field(DBManager.Fields.Id)
+                .EqualsTo(id)
+                .Or()
+                .Field(DBManager.Fields.SupervisorId)
+                .EqualsTo(id));
+        }
+
+        public bool AddStaffMember(string name, string hireDate, int group, string salary, string id = null)
         {
             try
             {
@@ -45,20 +53,13 @@ namespace SalaryCalc
                 int salaryTemp;
                 int supervisorId = 0;
 
-                if (name.Length == 0)
-                    return false;
-
                 date = Convert.ToDateTime(hireDate);
-                if (date.CompareTo(DateTime.Now) > 0)
-                    return false;
-
                 salaryTemp = Convert.ToInt32(salary);
-
-                if (group < 0 || group > 2)
-                    return false;
-
-                if(id!="")
+                if(!string.IsNullOrEmpty(id))
                     supervisorId = Convert.ToInt32(id);
+
+                if (!ValidateStaffMemberData(name, date, group))
+                    return false;
 
                 StaffMember staffMember = new StaffMember(name, date.ToShortDateString(), group, salaryTemp);
 
@@ -67,32 +68,45 @@ namespace SalaryCalc
 
                 int resId = DBManager.SavePerson(staffMember);
                 staffMember.Id = resId;
-                form.addStuffMemberInTable(staffMember);
+                form.AddStuffMemberInTable(staffMember);
                 
                 return true;               
             }
             catch(Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show("error while creating new staff member\n" + e.Message);
                 return false;
             }
         }
 
-        public int calculateSalary(int staffMemberId)
+        public int CalculateSalary(int staffMemberId)
         {
-            List<StaffMember> member = DBManager.Load("id = " + staffMemberId);
-            return (int)SalaryCalculator.calcSalary(member[0], true, false);
+            List<StaffMember> member = DBManager.Load(new DBManager.Condition()
+                .Field(DBManager.Fields.Id)
+                .EqualsTo(staffMemberId.ToString()));
+            return (int)SalaryCalculator.CalcSalary(member[0], true, false);
         }
         
-        public int calculateAllSalary()
+        public int CalculateAllSalary()
         {
             List<StaffMember> staffMembers = DBManager.Load();
             double totalSalary = 0;
             foreach(StaffMember member in staffMembers)
             {
-                totalSalary += SalaryCalculator.calcSalary(member, true, false);
+                totalSalary += SalaryCalculator.CalcSalary(member, true, false);
             }
             return (int)totalSalary;
+        }
+
+        private bool ValidateStaffMemberData(string name, DateTime hireDate, int group)
+        {
+            if (name.Length == 0)
+                return false;
+            if (hireDate.CompareTo(DateTime.Now) > 0)
+                return false;
+            if (group < 0 || group > 2)
+                return false;
+            return true;
         }
     }
 }

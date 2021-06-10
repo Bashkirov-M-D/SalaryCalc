@@ -4,31 +4,33 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SalaryCalc
 {
     public class DBManager
     {
-        /*public static List<StaffMember> LoadAll()
+        public enum Fields
         {
-            using (IDbConnection connection = new SQLiteConnection(LoadConnectionString()))
-            {
-                var output = connection.Query<StaffMember>("select * from Staff");
-                return output.AsList();
-            }
-        }*/
+            Id,
+            Name,
+            HireDate,
+            StaffGroup,
+            Salary,
+            SupervisorId,
+            Login,
+            Password
+        }
 
-        public static List<StaffMember> Load(string filter = "")
+        private static readonly string[] DBFields = {"id", "Name", "HireDate", "StaffGroup", "Salary", "SupervisorId", "Login", "Password"};
+
+        public static List<StaffMember> Load(Condition condition)
         {
             try
             {
                 using (IDbConnection connection = new SQLiteConnection(LoadConnectionString()))
                 {
-                    if (filter != "")
-                        filter = "where " + filter;
-                    var output = connection.Query<StaffMember>("select * from Staff " + filter, new DynamicParameters());
+                    var output = connection.Query<StaffMember>("select * from Staff " + condition.ConditionString, new DynamicParameters());
                     return output.AsList();
                 }
             }
@@ -37,6 +39,11 @@ namespace SalaryCalc
                 MessageBox.Show("Invalid argument \n" + e.Message);
                 return null;
             }
+        }
+
+        public static List<StaffMember> Load()
+        {
+            return Load(new Condition());
         }
 
         public static int SavePerson(StaffMember staffMember)
@@ -52,6 +59,53 @@ namespace SalaryCalc
         private static string LoadConnectionString(string id = "Database")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
+        }
+
+        public class Condition
+        {
+            private string conditionString = string.Empty;
+
+            public string ConditionString { get {
+                    if (string.IsNullOrEmpty(conditionString))
+                        return conditionString;
+                    else return "where " + conditionString;
+                }
+            }
+
+            public Condition Field (Fields field)
+            {
+                if (!Enum.IsDefined(typeof(Fields), field))
+                    throw new ArgumentException("field argument out of range");
+                conditionString += DBFields[(int)field];
+                return this;
+            }
+
+            public Condition EqualsTo(string value)
+            {
+                conditionString += "=" + value;
+                return this;
+            }
+            public Condition LessThen(string value)
+            {
+                conditionString += "<" + value;
+                return this;
+            }
+            public Condition MoreThen(string value)
+            {
+                conditionString += ">" + value;
+                return this;
+            }
+            public Condition And()
+            {
+                conditionString += " and ";
+                return this;
+            }
+            public Condition Or()
+            {
+                conditionString += " or ";
+                return this;
+            }
+
         }
     }
 }

@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SalaryCalc
@@ -37,7 +31,7 @@ namespace SalaryCalc
             manager = new EventManager(this);
         }
 
-        public void addStuffMemberInTable(StaffMember staffMember)
+        public void AddStuffMemberInTable(StaffMember staffMember)
         {
             int rowNumber = staffTable.Rows.Count;
             staffTable.Rows.Add(staffMember.Name, staffMember.HireDate, 
@@ -45,7 +39,7 @@ namespace SalaryCalc
             staffTable.Rows[rowNumber].HeaderCell.Value = staffMember.Id + "";
         }
 
-        public void clearTable()
+        public void ClearTable()
         {
             staffTable.Rows.Clear();
         }
@@ -53,12 +47,12 @@ namespace SalaryCalc
         private void LoadForm()
         {
             this.Size = new Size(1000, 800);
-            staffTable = createGridView();
-            createButtons();
+            staffTable = CreateGridView();
+            CreateButtons();
             CreateTextBoxes();
         }
 
-        private DataGridView createGridView()
+        private DataGridView CreateGridView()
         {
             DataGridView table = new DataGridView();
 
@@ -89,7 +83,7 @@ namespace SalaryCalc
             return table;
         }
 
-        private void createButtons()
+        private void CreateButtons()
         {
             addStaffMember = new Button();
             calcSalary = new Button();
@@ -125,15 +119,15 @@ namespace SalaryCalc
         {
             string id = idTextBox.Text;
             if (id == "" || id == "0")
-                manager.fillTable();
+                manager.FillTable();
             else
-                manager.filterTable("id = " + id + " or supervisorId = " + id);
+                manager.FilterTableById(id);
         }
 
         private void CalcAllSalary_Click(object sender, EventArgs e)
         {
             int salary;
-            salary = manager.calculateAllSalary();
+            salary = manager.CalculateAllSalary();
             MessageBox.Show("Salary: " + salary);
         }
 
@@ -142,7 +136,7 @@ namespace SalaryCalc
             try
             {
                 int salary;
-                salary = manager.calculateSalary(Convert.ToInt32(idTextBox.Text));
+                salary = manager.CalculateSalary(Convert.ToInt32(idTextBox.Text));
                 MessageBox.Show("Salary: " + salary);
             } catch(FormatException exc)
             {
@@ -155,7 +149,7 @@ namespace SalaryCalc
 
         private void AddStaffMember_Click(object sender, EventArgs e)
         {
-            bool res = manager.addStaffMember(
+            bool res = manager.AddStaffMember(
                 nameTextBox.Text,
                 hireDateTextBox.Text,
                 groupBox.SelectedIndex,
@@ -198,7 +192,6 @@ namespace SalaryCalc
             groupBox.Location = new Point(700, 550);
             groupBox.Size = new Size(130, 40);
             groupBox.SelectedIndex = 0;
-
         }
     }
 }

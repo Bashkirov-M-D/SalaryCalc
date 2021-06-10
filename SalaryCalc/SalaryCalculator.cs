@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 
 namespace SalaryCalc
 {
     public class SalaryCalculator
     {
-        public static double calcSalary(StaffMember member, bool calcSubordinateSalary, bool calcAllSubordinateSalary)
+        public static double CalcSalary(StaffMember member, bool calcSubordinateSalary, bool calcAllSubordinateSalary)
         {
             double salary;
             List<StaffMember> staffMembers;
@@ -25,24 +23,24 @@ namespace SalaryCalc
                     if(!(calcSubordinateSalary || calcAllSubordinateSalary))
                         return salary;
 
-                    staffMembers = DBManager.Load("supervisorId = " + member.Id);
-
+                    staffMembers = DBManager.Load(new DBManager.Condition().Field(DBManager.Fields.SupervisorId).EqualsTo(member.Id.ToString()));
                     if (calcAllSubordinateSalary)
                     {
                         foreach (StaffMember m in staffMembers)
-                            salary += calcSalary(m, true, true) * 0.005d;
+                            salary += CalcSalary(m, true, true) * 0.005d;
                         return salary;
                     }
                     foreach (StaffMember m in staffMembers)
-                        salary += calcSalary(m, false, false) * 0.005d;
+                        salary += CalcSalary(m, false, false) * 0.005d;
                     return salary;
                     
                 default:
 
                     salary = salesmanSalaryCalc(member.Salary, Convert.ToDateTime(member.HireDate));
-                    staffMembers = DBManager.Load("supervisorId = " + member.Id);
+                    staffMembers = DBManager.Load(new DBManager.Condition().Field(DBManager.Fields.SupervisorId).EqualsTo(member.Id.ToString()));
+
                     foreach (StaffMember m in staffMembers)
-                        salary += calcSalary(m, true, true) * 0.003d;
+                        salary += CalcSalary(m, true, true) * 0.003d;
                     return salary;
             }
         }
