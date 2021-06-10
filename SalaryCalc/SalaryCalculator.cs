@@ -14,11 +14,11 @@ namespace SalaryCalc
             {
                 case 0:
 
-                    return employeeSalaryCalc(member.Salary, Convert.ToDateTime(member.HireDate));
+                    return EmployeeSalaryCalc(member.Salary, Convert.ToDateTime(member.HireDate));
 
                 case 1:
 
-                    salary = managerSalaryCalc(member.Salary, Convert.ToDateTime(member.HireDate));
+                    salary = ManagerSalaryCalc(member.Salary, Convert.ToDateTime(member.HireDate));
 
                     if(!(calcSubordinateSalary || calcAllSubordinateSalary))
                         return salary;
@@ -36,7 +36,7 @@ namespace SalaryCalc
                     
                 default:
 
-                    salary = salesmanSalaryCalc(member.Salary, Convert.ToDateTime(member.HireDate));
+                    salary = SalesmanSalaryCalc(member.Salary, Convert.ToDateTime(member.HireDate));
                     staffMembers = DBManager.Load(new DBManager.Condition().Field(DBManager.Fields.SupervisorId).EqualsTo(member.Id.ToString()));
 
                     foreach (StaffMember m in staffMembers)
@@ -45,22 +45,22 @@ namespace SalaryCalc
             }
         }
 
-        private static double employeeSalaryCalc(int baseSalary, DateTime hireDate)
+        private static double EmployeeSalaryCalc(int baseSalary, DateTime hireDate)
         {
-            return baseSalary * (1 + Math.Min(0.3d, calcYears(hireDate) * 0.03d));
+            return baseSalary * (1 + Math.Min(0.3d, CalcYears(hireDate) * 0.03d));
         }
 
-        private static double managerSalaryCalc(int baseSalary, DateTime hireDate)
+        private static double ManagerSalaryCalc(int baseSalary, DateTime hireDate)
         {
-            return baseSalary * (1 + Math.Min(0.4d, calcYears(hireDate) * 0.05d));
+            return baseSalary * (1 + Math.Min(0.4d, CalcYears(hireDate) * 0.05d));
         }
 
-        private static double salesmanSalaryCalc(int baseSalary, DateTime hireDate)
+        private static double SalesmanSalaryCalc(int baseSalary, DateTime hireDate)
         {
-            return baseSalary * (1 + Math.Min(0.35d, calcYears(hireDate) * 0.01d));
+            return baseSalary * (1 + Math.Min(0.35d, CalcYears(hireDate) * 0.01d));
         }
 
-        private static int calcYears(DateTime hireDate)
+        private static int CalcYears(DateTime hireDate)
         {
             TimeSpan timeSpan = hireDate.Subtract(DateTime.Now);
             return - timeSpan.Days / 365;

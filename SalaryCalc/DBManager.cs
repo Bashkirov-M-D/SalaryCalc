@@ -28,11 +28,9 @@ namespace SalaryCalc
         {
             try
             {
-                using (IDbConnection connection = new SQLiteConnection(LoadConnectionString()))
-                {
-                    var output = connection.Query<StaffMember>("select * from Staff " + condition.ConditionString, new DynamicParameters());
-                    return output.AsList();
-                }
+                using IDbConnection connection = new SQLiteConnection(LoadConnectionString());
+                var output = connection.Query<StaffMember>("select * from Staff " + condition.ConditionString, new DynamicParameters());
+                return output.AsList();
             }
             catch(Exception e)
             {
@@ -48,12 +46,10 @@ namespace SalaryCalc
 
         public static int SavePerson(StaffMember staffMember)
         {
-            using (IDbConnection connection = new SQLiteConnection(LoadConnectionString()))
-            {
-                connection.Execute("insert into Staff (Name, HireDate, StaffGroup, Salary, SupervisorId, Login, Password) values " +
-                    "(@Name, @HireDate, @StaffGroup, @Salary, @SupervisorId, @Login, @Password)", staffMember);
-                return connection.QueryFirst<int>("select last_insert_rowid()");
-            }
+            using IDbConnection connection = new SQLiteConnection(LoadConnectionString());
+            connection.Execute("insert into Staff (Name, HireDate, StaffGroup, Salary, SupervisorId, Login, Password) values " +
+                "(@Name, @HireDate, @StaffGroup, @Salary, @SupervisorId, @Login, @Password)", staffMember);
+            return connection.QueryFirst<int>("select last_insert_rowid()");
         }
 
         private static string LoadConnectionString(string id = "Database")

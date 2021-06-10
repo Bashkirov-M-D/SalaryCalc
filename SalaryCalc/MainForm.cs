@@ -6,7 +6,7 @@ namespace SalaryCalc
 {
     public partial class MainForm : Form
     {
-        private EventManager manager;
+        private readonly EventManager manager;
 
         private DataGridView staffTable;
 
