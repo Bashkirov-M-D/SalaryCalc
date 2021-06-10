@@ -22,12 +22,14 @@
         public string Login { get => login; set => login = value; }
         public string Password { get => password; set => password = value; }
 
-        public StaffMember(string name, string hireDate, int group, int baseSalary)
+        public StaffMember(string name, string hireDate, int group, int baseSalary, string login, string password)
         {
             Name = name;
             HireDate = hireDate;
             StaffGroup = group;
             Salary = baseSalary;
+            Login = login;
+            Password = password;
         }
 
         public StaffMember(){}

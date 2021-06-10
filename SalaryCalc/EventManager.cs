@@ -45,7 +45,7 @@ namespace SalaryCalc
                 .EqualsTo(id));
         }
 
-        public bool AddStaffMember(string name, string hireDate, int group, string salary, string id = null)
+        public bool AddStaffMember(string name, string hireDate, int group, string salary, string login, string password, string id = null)
         {
             try
             {
@@ -58,10 +58,10 @@ namespace SalaryCalc
                 if(!string.IsNullOrEmpty(id))
                     supervisorId = Convert.ToInt32(id);
 
-                if (!ValidateStaffMemberData(name, date, group))
+                if (!ValidateStaffMemberData(name, date, group, login, password))
                     return false;
 
-                StaffMember staffMember = new StaffMember(name, date.ToShortDateString(), group, salaryTemp);
+                StaffMember staffMember = new StaffMember(name, date.ToShortDateString(), group, salaryTemp, login, password);
 
                 if (supervisorId > 0)
                     staffMember.SupervisorId = supervisorId;
@@ -98,13 +98,14 @@ namespace SalaryCalc
             return (int)totalSalary;
         }
 
-        private bool ValidateStaffMemberData(string name, DateTime hireDate, int group)
+        private bool ValidateStaffMemberData(string name, DateTime hireDate, int group, string login, string password)
         {
-            if (name.Length == 0)
-                return false;
-            if (hireDate.CompareTo(DateTime.Now) > 0)
-                return false;
-            if (group < 0 || group > 2)
+            if (name.Length == 0
+                || hireDate.CompareTo(DateTime.Now) > 0
+                || group < 0 || group > 2
+                || string.IsNullOrEmpty(login)
+                || string.IsNullOrEmpty(password)
+                )
                 return false;
             return true;
         }

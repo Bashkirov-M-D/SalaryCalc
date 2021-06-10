@@ -19,6 +19,8 @@ namespace SalaryCalc
         private TextBox hireDateTextBox;
         private TextBox salaryTextBox;
         private TextBox idTextBox;
+        private TextBox loginTextBox;
+        private TextBox passwordTextBox;
 
         private ComboBox groupBox;
 
@@ -35,7 +37,7 @@ namespace SalaryCalc
         {
             int rowNumber = staffTable.Rows.Count;
             staffTable.Rows.Add(staffMember.Name, staffMember.HireDate, 
-                StaffMember.GroupNames[staffMember.StaffGroup], staffMember.Salary);
+                StaffMember.GroupNames[staffMember.StaffGroup], staffMember.Salary, staffMember.SupervisorId);
             staffTable.Rows[rowNumber].HeaderCell.Value = staffMember.Id + "";
         }
 
@@ -46,7 +48,7 @@ namespace SalaryCalc
 
         private void LoadForm()
         {
-            this.Size = new Size(1000, 800);
+            this.Size = new Size(1000, 850);
             staffTable = CreateGridView();
             CreateButtons();
             CreateTextBoxes();
@@ -58,7 +60,7 @@ namespace SalaryCalc
 
             this.Controls.Add(table);
 
-            table.ColumnCount = 4;
+            table.ColumnCount = 5;
 
             table.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
             table.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
@@ -74,11 +76,13 @@ namespace SalaryCalc
             table.CellBorderStyle = DataGridViewCellBorderStyle.Single;
             table.GridColor = Color.Black;
             table.AllowUserToAddRows = false;
+            table.MultiSelect = false;
 
             table.Columns[0].Name = "Name";
             table.Columns[1].Name = "Hire date";
             table.Columns[2].Name = "Group";
             table.Columns[3].Name = "Base salary";
+            table.Columns[4].Name = "Supervisor id";
 
             return table;
         }
@@ -154,6 +158,8 @@ namespace SalaryCalc
                 hireDateTextBox.Text,
                 groupBox.SelectedIndex,
                 salaryTextBox.Text,
+                loginTextBox.Text,
+                passwordTextBox.Text,
                 idTextBox.Text
                 );
             if (!res) MessageBox.Show("Wrong arguments");
@@ -165,9 +171,11 @@ namespace SalaryCalc
             hireDateTextBox = new TextBox();
             salaryTextBox = new TextBox();
             idTextBox = new TextBox();
+            loginTextBox = new TextBox();
+            passwordTextBox = new TextBox();
 
-            TextBox[] textBoxes = { nameTextBox, hireDateTextBox, salaryTextBox, idTextBox };
-            string[] textBoxesTexts = { "Name", "date: dd.mm.yyyy", "Base salary", "Staff member id" };
+            TextBox[] textBoxes = { nameTextBox, hireDateTextBox, salaryTextBox, idTextBox, loginTextBox, passwordTextBox};
+            string[] textBoxesTexts = { "Name", "date: dd.mm.yyyy", "Base salary", "Staff member id", "login", "password"};
 
             for (int i = 0; i < textBoxes.Length; i++)
             {
@@ -189,7 +197,7 @@ namespace SalaryCalc
             groupBox.Items.Add("Employee");
             groupBox.Items.Add("Manager");
             groupBox.Items.Add("Salesman");
-            groupBox.Location = new Point(700, 550);
+            groupBox.Location = new Point(500, 600);
             groupBox.Size = new Size(130, 40);
             groupBox.SelectedIndex = 0;
         }
