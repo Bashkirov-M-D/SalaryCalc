@@ -14,6 +14,8 @@ namespace SalaryCalc
         private int staffGroup;
         private int salary;
         private int supervisorId;
+        private string login;
+        private string password;
 
         public string Name { get => name; set => name = value; }
         public string HireDate { get => hireDate; set => hireDate = value; }
@@ -21,6 +23,8 @@ namespace SalaryCalc
         public int Salary { get => salary; set => salary = value; }
         public int SupervisorId { get => supervisorId; set => supervisorId = value; }
         public int Id { get => id; set => id = value; }
+        public string Login { get => login; set => login = value; }
+        public string Password { get => password; set => password = value; }
 
         public StaffMember(string name, string hireDate, int group, int baseSalary)
         {

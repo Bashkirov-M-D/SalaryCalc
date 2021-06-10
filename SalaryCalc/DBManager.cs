@@ -43,8 +43,8 @@ namespace SalaryCalc
         {
             using (IDbConnection connection = new SQLiteConnection(LoadConnectionString()))
             {
-                connection.Execute("insert into Staff (Name, HireDate, StaffGroup, Salary, SupervisorId) values " +
-                    "(@Name, @HireDate, @StaffGroup, @Salary, @SupervisorId)", staffMember);
+                connection.Execute("insert into Staff (Name, HireDate, StaffGroup, Salary, SupervisorId, Login, Password) values " +
+                    "(@Name, @HireDate, @StaffGroup, @Salary, @SupervisorId, @Login, @Password)", staffMember);
                 return connection.QueryFirst<int>("select last_insert_rowid()");
             }
         }
