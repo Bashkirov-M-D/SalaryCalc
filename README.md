@@ -1,23 +1,37 @@
 # SalaryCalc
-This project is made with Windows Forms GUI Class library. It consists of 5 classes (besides default Program.cs, that I did not change).
+This project is made with Windows Forms GUI Class library. 
+
+Classes:
 
 1. MainForm.cs
 
 In this class I've implemented evrethyng connected to UI and nothing beyond that (as much as I could).
 
-2. StaffMember.cs
+2. LoginForm.cs
+
+Simple login form.
+
+3. User.cs
+
+Small class that contains data aboul logged in user
+
+4. StaffMember.cs
 
 This one contains all personal information about staff members.
 
-3. SalaryCalculator
+5. TreeCollection
 
-All calculations are here. Could be and should be much more effective to use this app for real purposes.
+Simple collection class for easier calculations
 
-4. DBManager
+6. SalaryCalculator
+
+All calculations are here.
+
+7. DBManager
 
 Everything connected to database.
 
-5. EventManager
+8. EventManager
 
 Connects all other classes together.
 
@@ -25,11 +39,8 @@ Connects all other classes together.
 What is good about this app:
 1. Code should be easy to understand.
 2. Easy to add new features.
-3. Some safety nets are implemented (i.e. you can not add people without names or salary, although you can still name them like "1").
 
 What should be improved:
 1. UI.
 2. More features.
-3. Optimisation (number of database requests could be significantly lower).
-
-I did not make any tests in my code because this project is relatively simple and there is not too much to test in it. 
+3. QA.
