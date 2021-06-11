@@ -183,9 +183,10 @@ namespace SalaryCalc
             label = new Label();
             this.Controls.Add(label);
             label.Location = new Point(700, 590);
-            label.Size = new Size(200, 200);
+            label.Size = new Size(240, 200);
             label.Text = "Staff member id text box is used to identify who will be supervisor of a staff member you are adding\n" +
-                "click any row to choose whose salary to calculate or to filter this person's subordinates (empty or 0 for all)";
+                "Click any row to choose whose salary to calculate or to filter this person's subordinates (empty or 0 for all)\n" +
+                "Use hire date text box to specify salary calculation target date";
 
             groupBox = new ComboBox();
             this.Controls.Add(groupBox);
