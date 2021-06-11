@@ -135,24 +135,15 @@ namespace SalaryCalc
         private void CalcAllSalary_Click(object sender, EventArgs e)
         {
             int salary;
-            salary = manager.CalculateAllSalary();
-            MessageBox.Show("Salary: " + salary);
+            salary = manager.CalculateAllSalary(hireDateTextBox.Text);
+            MessageBox.Show("Total salary: " + salary);
         }
 
         private void CalcSalary_Click(object sender, EventArgs e)
         {
-            try
-            {
-                int salary;
-                salary = manager.CalculateSalary(Convert.ToInt32(staffTable.CurrentRow.HeaderCell.Value.ToString()));
-                MessageBox.Show("Salary: " + salary);
-            } catch(FormatException exc)
-            {
-                MessageBox.Show("Invalid id \n" + exc.Message);
-            } catch(OverflowException exc)
-            {
-                MessageBox.Show("Invalid id \n" + exc.Message);
-            }
+            int salary;
+            salary = manager.CalculateSalary(staffTable.CurrentRow.HeaderCell.Value.ToString(), hireDateTextBox.Text);
+            MessageBox.Show(staffTable.CurrentRow.Cells[0].Value.ToString() + "'s Salary: " + salary);
         }
 
         private void AddStaffMember_Click(object sender, EventArgs e)

@@ -33,5 +33,11 @@
         }
 
         public StaffMember(){}
+
+        public override bool Equals(object obj)
+        {
+            return obj is StaffMember member &&
+                   id == member.id;
+        }
     }
 }

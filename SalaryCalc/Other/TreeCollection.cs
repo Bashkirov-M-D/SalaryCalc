@@ -34,13 +34,18 @@ namespace SalaryCalc.Other
         {
             Node<T> parent = FindNode(root, item);
             if (parent == null)
-                return null;
+                return new List<T>();
             return parent.Children.ConvertAll(new Converter<Node<T>, T>(ExtractItem));
         }
 
-        public T getRoot()
+        public T GetRoot()
         {
             return root.Item;
+        }
+
+        public T GetItem(T equalItem)
+        {
+            return FindNode(root, equalItem).Item;
         }
 
         private T ExtractItem(Node<T> node)
@@ -48,13 +53,20 @@ namespace SalaryCalc.Other
             return node.Item;
         }
 
+
         private Node<T> FindNode(Node<T> current, T item)
         {
+            if (root == null)
+                return null;
             if (item.Equals(current.Item))
                 return current;
-            foreach(Node<T> node in current.Children)
-                if (FindNode(node, item) != null)
-                    return node;
+            Node<T> nextNode;
+            foreach (Node<T> node in current.Children)
+            {
+                nextNode = FindNode(node, item);
+                if (nextNode != null)
+                    return nextNode;
+            }
             return null;
         }
 

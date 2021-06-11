@@ -50,7 +50,7 @@ namespace SalaryCalc
             {
                 connection.Execute("insert into Staff (Name, HireDate, StaffGroup, Salary, SupervisorId, Login, Password) values " +
                     "(@Name, @HireDate, @StaffGroup, @Salary, @SupervisorId, @Login, @Password)", staffMember);
-                return connection.QueryFirst<int>("select MAX(id) from Staff");
+                return connection.QueryFirst<int>("select MAX(id)");
             }
         }
 

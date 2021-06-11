@@ -84,23 +84,28 @@ namespace SalaryCalc
             }
         }
 
-        public int CalculateSalary(int staffMemberId)
+        public int CalculateSalary(string staffMemberId, string date)
         {
-            List<StaffMember> member = DBManager.Load(new DBManager.Condition()
+            var member = DBManager.Load(new DBManager.Condition()
                 .Field(DBManager.Fields.Id)
-                .EqualsTo(staffMemberId.ToString()));
-            return (int)SalaryCalculator.CalcSalary(member[0], true, false);
+                .EqualsTo(staffMemberId));
+
+            DateTime targetDate = DateTime.Now;
+
+            if (!string.IsNullOrEmpty(date))
+                targetDate = DateTime.Parse(date);
+                
+            return (int)SalaryCalculator.CalculateSalary(member[0], targetDate);
         }
         
-        public int CalculateAllSalary()
+        public int CalculateAllSalary(string date)
         {
-            List<StaffMember> staffMembers = DBManager.Load();
-            double totalSalary = 0;
-            foreach(StaffMember member in staffMembers)
-            {
-                totalSalary += SalaryCalculator.CalcSalary(member, true, false);
-            }
-            return (int)totalSalary;
+            DateTime targetDate = DateTime.Now;
+
+            if (!string.IsNullOrEmpty(date))
+                targetDate = DateTime.Parse(date);
+
+            return (int)SalaryCalculator.CalculateTotalSalary(targetDate);
         }
 
         private bool ValidateStaffMemberData(string name, DateTime hireDate, int group, string login, string password)
