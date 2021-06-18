@@ -5,7 +5,7 @@ Classes:
 
 1. MainForm.cs
 
-In this class I've implemented evrethyng connected to UI and nothing beyond that (as much as I could).
+In this class I've implemented everything connected to UI.
 
 2. LoginForm.cs
 
@@ -13,7 +13,7 @@ Simple login form.
 
 3. User.cs
 
-Small class that contains data aboul logged in user
+Small class that contains data about logged in user
 
 4. StaffMember.cs
 
