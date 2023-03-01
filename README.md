@@ -1,5 +1,5 @@
 # SalaryCalc
-This project is made with Windows Forms GUI Class library. 
+Manages staff of an imaginary company.
 
 Classes:
 
