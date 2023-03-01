@@ -34,13 +34,3 @@ Everything connected to database.
 8. EventManager
 
 Connects all other classes together.
-
-
-What is good about this app:
-1. Code should be easy to understand.
-2. Easy to add new features.
-
-What should be improved:
-1. UI.
-2. More features.
-3. QA.
